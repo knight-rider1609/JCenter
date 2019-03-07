@@ -30,12 +30,19 @@ artifacts {
 }
 
 // Bintray
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
+String bintrayUser = System.getenv("BINTRAY_USER")
+String bintrayApiKey = System.getenv("BINTRAY_API_KEY")
+
+if (bintrayUser == null || bintrayApiKey == null) {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    bintrayUser = properties.getProperty("bintray.user")
+    bintrayApiKey = properties.getProperty("bintray.apikey")
+}
 
 bintray {
-    user = properties.getProperty("bintray.user")
-    key = properties.getProperty("bintray.apikey")
+    user = bintrayUser
+    key = bintrayApiKey
 
     configurations = ['archives']
     pkg {
